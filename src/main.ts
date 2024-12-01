@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'normalize.css';
 import './assets/css/index.less';
 import { createApp } from 'vue';
@@ -22,19 +21,3 @@ app.use(registerIcons);
 app.use(router);
 app.use(ElementPlus);
 app.mount('#app');
-=======
-import './assets/main.css'
-
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
-import App from './App.vue'
-import router from './router'
-
-const app = createApp(App)
-
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
->>>>>>> f19012e78938dddb0823e8b02b54ff59ec9cb9aa
