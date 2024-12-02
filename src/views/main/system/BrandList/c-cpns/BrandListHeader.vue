@@ -48,9 +48,8 @@
               placeholder="请选择查询的状态"
               style="width: 100%"
             >
-              <el-option label="待审核" :value="0" />
-              <el-option label="已上架" :value="1" />
-              <el-option label="已驳回" :value="2" />
+              <el-option label="启用" :value="0" />
+              <el-option label="禁用" :value="1" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -85,20 +84,11 @@ const priceRange = ref({
   max: '',
 });
 
-// 分类数据（示例）
 const categories = ref([
   { label: '电子产品', value: 'electronics' },
   { label: '服装', value: 'clothing' },
   { label: '家居', value: 'home' },
 ]);
-
-// 重置操作
-const formRef = ref<InstanceType<typeof ElForm>>()
-function handleResetClick() {
-  formRef.value?.resetFields()
-  priceRange.value = { min: '', max: '' };
-  emit('resetClick')
-}
 
 // 查询操作
 function handleQueryClick() {

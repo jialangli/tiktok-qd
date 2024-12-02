@@ -23,11 +23,12 @@ import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormRules, ElForm } from 'element-plus'
 import useLoginStore from '@/store/login/login'
-import type { IAccount } from '@/types'
+import { IAccount } from '@/types'
 import { localCache } from '@/utils/cache'
 
 const CACHE_NAME = 'name'
 const CACHE_PASSWORD = 'password'
+
 
 // 1.定义account数据
 const account = reactive<IAccount>({

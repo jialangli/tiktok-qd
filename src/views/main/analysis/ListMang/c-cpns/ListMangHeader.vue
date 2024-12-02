@@ -1,6 +1,5 @@
 <template>
   <div class="search">
-    <!-- 1.输入搜索关键字的表单 -->
     <el-form :model="searchForm" ref="formRef" label-width="80px">
       <el-row :gutter="20">
         <el-col :span="8">
@@ -12,14 +11,6 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="8">
-          <el-form-item label="手机号码" prop="cellphone">
-            <el-input
-              v-model="searchForm.cellphone"
-              placeholder="请输入查询的手机号码"
-            />
-          </el-form-item>
-        </el-col>
         <el-col :span="8">
           <el-form-item label="价格范围">
             <el-input
@@ -42,8 +33,9 @@
               placeholder="请选择查询的状态"
               style="width: 100%"
             >
-              <el-option label="启用" :value="1" />
-              <el-option label="禁用" :value="0" />
+              <el-option label="已发货" :value="1" />
+              <el-option label="代发货" :value="0" />
+              <el-option label="已完成" :value="2" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -61,15 +53,10 @@
       </el-row>
     </el-form>
 
-    <!-- 2.重置和搜索的按钮 -->
     <div class="btns">
       <el-button icon="Refresh" @click="handleResetClick">重置</el-button>
-      <el-button icon="Search" type="primary" @click="handleQueryClick"
-        >查询</el-button
-      >
-      <el-button icon="Plus" type="success" @click="handleAddClick"
-        >新增</el-button
-      >
+      <el-button icon="Search" type="primary" @click="handleQueryClick">查询</el-button>
+      <el-button icon="Plus" type="success" @click="handleAddClick">新增</el-button>
     </div>
   </div>
 </template>
@@ -79,13 +66,11 @@ import { reactive, ref } from 'vue'
 import type { ElForm } from 'element-plus'
 
 // 定义自定义事件
-const emit = defineEmits(['queryClick', 'resetClick'])
+const emit = defineEmits(['queryClick', 'resetClick', 'addClick'])
 
 // 定义form的数据
 const searchForm = reactive({
   name: '',
-  realname: '',
-  cellphone: '',
   enable: '',
   createAt: '',
 })
@@ -99,32 +84,22 @@ const priceRange = ref({
 // 重置操作
 const formRef = ref<InstanceType<typeof ElForm>>()
 function handleResetClick() {
-  // 1.form中的数据全部重置
   formRef.value?.resetFields()
-
-  // 2.将价格范围重置
   priceRange.value = { min: '', max: '' }
-
-  // 3.将事件出去, content内部重新发送网络请求
   emit('resetClick')
 }
 
 function handleQueryClick() {
-  // 将价格范围添加到查询条件中
   const queryConditions = {
     ...searchForm,
     priceRange: priceRange.value,
   }
-
-  console.log('查询条件:', queryConditions)
   emit('queryClick', queryConditions)
 }
 
 // 新增操作
 function handleAddClick() {
-  // 这里可以实现新增的逻辑，比如打开一个新增表单的对话框
-  console.log('执行新增操作')
-  emit('addClick') // 发出新增事件
+  emit('addClick')
 }
 </script>
 

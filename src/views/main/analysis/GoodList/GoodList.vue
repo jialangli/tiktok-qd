@@ -1,11 +1,13 @@
 <template>
   <div class="header">
+    <GoodListForm />
     <GoodListHeader />
     <GoodListContent />
   </div>
 </template>
 
 <script setup lang="ts">
+import GoodListForm from './c-cpns/GoodListForm.vue';
 import GoodListContent from './c-cpns/GoodListContent.vue'
 import GoodListHeader from './c-cpns/GoodListHeader.vue'
 </script>
