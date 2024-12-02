@@ -1,4 +1,5 @@
 <template>
+
   <div class="search">
     <!-- 输入搜索关键字的表单 -->
     <el-form :model="searchForm" ref="formRef" label-width="80px">

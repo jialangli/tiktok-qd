@@ -31,7 +31,7 @@ const router = createRouter({
         {
           path: 'analysis/GoodSets',
           name: 'monitor',
-          component: () => import('@/views/main/analysis/GoodSets/GoodSets.vue'),
+          component: () => import('@/views/main/analysis/DataAnalysis/DataAnalysis.vue'),
         },
         {
           path: 'analysis/ListMang',

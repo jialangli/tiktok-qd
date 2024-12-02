@@ -9,6 +9,7 @@ import pinia from './store';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css'; // 只保留这行
 import registerIcons from './global/register-icons';
+import * as echarts from 'echarts';
 
 const app = createApp(App);
 

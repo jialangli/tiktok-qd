@@ -1,63 +1,42 @@
 <template>
   <div class="content">
     <div class="header">
-      <h3 class="title">商品列表</h3>
+      <h3 class="title">订单列表</h3>
     </div>
     <div class="table">
-      <el-table :data="usersList" border style="width: 100%">
-        <el-table-column align="center" type="selection" width="60px" />
-        <el-table-column align="center" type="index" label="商品ID" width="200px" />
-        <el-table-column align="center" label="商品名称" prop="name" width="200px" />
-        <el-table-column align="center" label="SKU ID" prop="skuId" width="200px" />
-        <el-table-column align="center" label="店铺名称" prop="shopName" width="200px" />
-        <el-table-column align="center" label="数量" prop="quantity" width="200px" />
-        <el-table-column align="center" label="价格￥" prop="price" width="200px" />
-        <el-table-column align="center" label="下单时间" prop="orderTime" width="200px" />
-        <el-table-column align="center" label="收件人" prop="recipient" width="200px" />
-        <el-table-column align="center" label="状态" prop="status" width="200px">
+      <el-table :data="orderList" border style="width: 100%">
+        <el-table-column align="center" type="selection" width="60px"></el-table-column>
+        <el-table-column align="center" type="index" label="订单编号" width="150px"></el-table-column>
+        <el-table-column align="center" label="商品名称" prop="name" width="150px"></el-table-column>
+        <el-table-column align="center" label="商品描述" prop="skuId" width="150px"></el-table-column>
+        <el-table-column align="center" label="店铺名称" prop="shopName" width="150px"></el-table-column>
+        <el-table-column align="center" label="数量" prop="quantity" width="150px"></el-table-column>
+        <el-table-column align="center" label="价格￥" prop="price" width="100px"></el-table-column>
+        <el-table-column align="center" label="下单时间" prop="orderTime" width="150px"></el-table-column>
+        <el-table-column align="center" label="收件人" prop="recipient" width="150px"></el-table-column>
+        <el-table-column align="center" label="状态" prop="status" width="150px">
+          <template #default="scope">
+            <span>{{ scope.row.status }}</span>
+          </template>
+        </el-table-column>
+
+        <!-- 操作列 -->
+        <el-table-column align="center" label="操作" width="200px">
           <template #default="scope">
             <el-button
               size="small"
-              :type="scope.row.status ? 'primary' : 'danger'"
-              plain
-              @click="toggleStatus(scope.row)"
-            >
-              {{ scope.row.status ? '启用' : '禁用' }}
-            </el-button>
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" label="创建时间" prop="createAt">
-          <template #default="scope">
-            {{ formatUTC(scope.row.createAt) }}
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" label="更新时间" prop="updateAt">
-          <template #default="scope">
-            {{ formatUTC(scope.row.updateAt) }}
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" label="操作" width="150px">
-          <template #default="scope">
-            <el-button
-              v-if="isUpdate"
-              size="small"
-              icon="Edit"
               type="primary"
-              text
+              plain
               @click="handleEditBtnClick(scope.row)"
+              icon="edit"
             >
               编辑
             </el-button>
             <el-button
-              v-if="isDelete"
               size="small"
-              icon="Delete"
               type="danger"
-              text
-              @click="handleDeleteBtnClick(scope.row.id)"
+              icon="delete"
+              @click="handleDeleteBtnClick(scope.row.orderNumber)"
             >
               删除
             </el-button>
@@ -71,7 +50,7 @@
         v-model:page-size="pageSize"
         :page-sizes="[10, 20, 30]"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="usersTotalCount"
+        :total="orderTotalCount"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -80,73 +59,56 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import useSystemStore from '@/store/main/system/system'
-import { formatUTC } from '@/utils/format'
 import { ref } from 'vue'
-import usePermissions from '@/hooks/usePermissions'
 
 // 定义事件
-const emit = defineEmits(['newClick', 'editClick'])
+const emit = defineEmits(['editClick', 'deleteClick'])
 
-// 用户的权限判断
-const isCreate = usePermissions('users:create')
-const isDelete = usePermissions('users:delete')
-const isUpdate = usePermissions('users:update')
-const isQuery = usePermissions('users:query')
+// 模拟订单数据
+const mockOrders = [
+  { id: 1, name: "无线蓝牙耳机", skuId: "SKU001", shopName: "音响大师", quantity: 1, price: 299.00, orderTime: "2023-10-01 10:00", recipient: "张三", status: "已发货" },
+  { id: 2, name: "智能手表", skuId: "SKU002", shopName: "智联科技", quantity: 2, price: 899.00, orderTime: "2023-10-02 11:00", recipient: "李四", status: "待发货" },
+  { id: 3, name: "4K高清电视", skuId: "SKU003", shopName: "视界科技", quantity: 1, price: 4999.00, orderTime: "2023-10-03 12:00", recipient: "王五", status: "已完成" },
+  { id: 4, name: "便携式充电宝", skuId: "SKU004", shopName: "移动电源", quantity: 3, price: 99.00, orderTime: "2023-10-04 13:00", recipient: "赵六", status: "已发货" },
+  { id: 5, name: "高性能游戏鼠标", skuId: "SKU005", shopName: "电竞王者", quantity: 1, price: 249.00, orderTime: "2023-10-05 14:00", recipient: "钱七", status: "待发货" },
+  { id: 6, name: "家用咖啡机", skuId: "SKU006", shopName: "咖啡之家", quantity: 1, price: 799.00, orderTime: "2023-10-06 15:00", recipient: "孙八", status: "已完成" },
+  { id: 7, name: "旅行背包", skuId: "SKU007", shopName: "探险者", quantity: 2, price: 199.00, orderTime: "2023-10-07 16:00", recipient: "周九", status: "已发货" },
+  { id: 8, name: "蓝牙音响", skuId: "SKU008", shopName: "音乐之声", quantity: 1, price: 399.00, orderTime: "2023-10-08 17:00", recipient: "吴十", status: "待发货" },
+  { id: 9, name: "智能家居摄像头", skuId: "SKU009", shopName: "家居卫士", quantity: 1, price: 499.00, orderTime: "2023-10-09 18:00", recipient: "郑十一", status: "已完成" },
+  { id: 10, name: "运动鞋", skuId: "SKU010", shopName: "运动先锋", quantity: 1, price: 599.00, orderTime: "2023-10-10 19:00", recipient: "冯十二", status: "待发货" },
+];
 
-// 发起请求，获取用户列表数据
-const systemStore = useSystemStore()
-const currentPage = ref(1)
-const pageSize = ref(10)
-fetchUserListData()
-
-// 获取用户列表数据
-const { usersList, usersTotalCount } = storeToRefs(systemStore)
+// 使用模拟数据
+const orderList = ref(mockOrders)
+const orderTotalCount = ref(mockOrders.length)
 
 // 页码相关的逻辑
+const currentPage = ref(1)
+const pageSize = ref(10)
+
 function handleSizeChange() {
-  fetchUserListData()
+  fetchOrderListData()
 }
 
 function handleCurrentChange() {
-  fetchUserListData()
+  fetchOrderListData()
 }
 
-// 发送网络请求获取用户列表数据
-function fetchUserListData(formData: any = {}) {
-  if (!isQuery) return
-
-  // 获取 offset/size
-  const size = pageSize.value
-  const offset = (currentPage.value - 1) * size
-  const pageInfo = { size, offset }
-
-  // 发起网络请求
-  const queryInfo = { ...pageInfo, ...formData }
-  systemStore.postUsersListAction(queryInfo)
+// 发送网络请求获取订单列表数据
+function fetchOrderListData(formData: any = {}) {
+  // 这里可以调用后端接口获取数据
 }
 
-// 删除/新建/编辑的操作
-function handleDeleteBtnClick(id: number) {
-  systemStore.deleteUserByIdAction(id)
+// 删除/编辑的操作
+function handleDeleteBtnClick(orderNumber: string) {
+  emit('deleteClick', orderNumber)
 }
 
-function handleNewUserClick() {
-  emit('newClick')
+function handleEditBtnClick(order: any) {
+  emit('editClick', order)
 }
 
-function handleEditBtnClick(itemData: any) {
-  emit('editClick', itemData)
-}
-
-// 切换状态
-function toggleStatus(row: any) {
-  const newStatus = !row.status
-  systemStore.updateUserStatusAction(row.id, newStatus)
-}
-
-defineExpose({ fetchUserListData })
+defineExpose({ fetchOrderListData })
 </script>
 
 <style lang="less" scoped>
@@ -168,17 +130,9 @@ defineExpose({ fetchUserListData })
 }
 
 .table {
-  width: 100%; /* 确保表格容器宽度为100% */
-  overflow-x: auto; /* 允许横向滚动 */
-}
-
-.table :deep(.el-table__cell) {
-  padding: 12px 0;
-}
-
-.el-button {
-  margin-left: 0;
-  padding: 5px 8px;
+  :deep(.el-table__cell) {
+    padding: 12px 0;
+  }
 }
 
 .pagination {
