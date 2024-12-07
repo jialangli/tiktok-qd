@@ -8,7 +8,7 @@
       status-icon
       ref="formRef"
     >
-      <el-form-item label="帐号" prop="name">
+      <el-form-item label="账号" prop="name">
         <el-input v-model="account.name" />
       </el-form-item>
       <el-form-item label="密码" prop="password">

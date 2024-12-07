@@ -59,6 +59,8 @@ const phoneRef = ref<InstanceType<typeof PanePhone>>()
 
 async function handleLoginBtnClick() {
   try {
+    // 添加 flag 校验，登录成功跳转
+    let flag = true
     if (activeName.value === 'account') {
       // 调用帐号登录
       await accountRef.value?.loginAction(isRemPwd.value)
@@ -66,9 +68,11 @@ async function handleLoginBtnClick() {
       // 调用手机登录
       await phoneRef.value?.loginAction(isRemPwd.value)
     }
+    if (flag){
+      // 登录成功后跳转到 Main 页面
+      router.push('/main') // 使用路径字符串
+    }
 
-    // 登录成功后跳转到 Main 页面
-    router.push('/main') // 使用路径字符串
   } catch (error) {
     console.error('登录失败', error)
     // 这里可以添加用户友好的错误提示

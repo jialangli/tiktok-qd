@@ -21,7 +21,7 @@
         <span class="user-info">
           <el-avatar
             :size="30"
-            src="D:\Desktop\vue3+ts-cms\vue-ts-cms\src\assets\img\OIP-C.jpg"
+            src="/src/assets/img/OIP-C.jpg"
           />
           <span class="name">{{ loginStore.userInfo?.name }}</span>
         </span>

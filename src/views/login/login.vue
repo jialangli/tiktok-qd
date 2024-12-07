@@ -16,6 +16,6 @@ import LoginPanel from "./c-cpns/login-panel.vue";
   justify-content: center;
   width:100%;
   height:100%;
-  background: url(D:\Desktop\tiktok\tiktok-mall\src\assets\img\login-bg.svg);
+  background: url("src/assets/img/login-bg.svg");
 }
 </style>

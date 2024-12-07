@@ -3,7 +3,7 @@
     <div class="logo">
       <img
         class="img"
-        src="D:\Desktop\vue3+ts-cms\vue-ts-cms\src\assets\img\de8dc7a615f6633ca1abdf68ed70670.jpg"
+        src="/src/assets/img/de8dc7a615f6633ca1abdf68ed70670.jpg"
         alt="logo"
       />
       <h2 class="title">用户信息管理系统</h2>
@@ -24,14 +24,19 @@
             <el-icon><Files /></el-icon>
             <span>首页</span>
           </template>
-          <el-menu-item-group title="商品管理">
-            <el-menu-item index="1-1" @click="handleItemClick({ url: '/main/analysis/GoodList' })">商品列表</el-menu-item>
-            <el-menu-item index="1-2" @click="handleItemClick({ url: '/main/analysis/GoodReview' })">商品审核</el-menu-item>
-            <el-menu-item index="1-3" @click="handleItemClick({ url: '/main/analysis/GoodSets' })">商品设置</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="订单管理">
-            <el-menu-item index="1-4" @click="handleItemClick({ url: '/main/analysis/ListMang' })">订单管理</el-menu-item>
-          </el-menu-item-group>
+
+          <el-sub-menu index="1-1">
+            <template #title>商品管理</template>
+              <el-menu-item index="1-1-1" @click="handleItemClick({ url: '/main/analysis/GoodList' })">商品列表</el-menu-item>
+              <el-menu-item index="1-1-2" @click="handleItemClick({ url: '/main/analysis/GoodReview' })">商品审核</el-menu-item>
+              <el-menu-item index="1-1-3" @click="handleItemClick({ url: '/main/analysis/GoodSets' })">商品设置</el-menu-item>
+          </el-sub-menu>
+
+          <el-sub-menu index="1-4">
+            <template #title>订单管理</template>
+              <el-menu-item index="1-4-1" @click="handleItemClick({ url: '/main/analysis/ListMang' })">订单管理</el-menu-item>
+          </el-sub-menu>
+
           <el-sub-menu index="1-5">
             <template #title>分类列表</template>
             <el-menu-item index="1-5-1" @click="handleItemClick({ url: '/main/system/BrandList' })">品牌列表</el-menu-item>
@@ -114,7 +119,7 @@ function handleClose() {
   }
 
   .el-menu-item:hover {
-    color: #fff;
+    color: #6495ed;
   }
 
   .el-menu-item.is-active {

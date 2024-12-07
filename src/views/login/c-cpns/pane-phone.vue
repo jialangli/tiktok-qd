@@ -14,7 +14,14 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const PHONE = 'phone'
+const CAPTCHA = 'captcha'
+
+
+</script>
+
+
 
 <style lang="less" scoped>
 .panel-phone {
